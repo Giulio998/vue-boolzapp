@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
+        rel="stylesheet">
+    <script src="https://kit.fontawesome.com/c35ecedc9f.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="container flex">
+
+            <!-- SIDEBAR --------------------------------------------------------->
+            <div class="sideBar">
+
+                <!-- SIDENAVBAR --------------------------------------------------------->
+                <div class="sideNavBar jCCenter flex padding5px ">
+                    <img class="profileIcon" src="./img/avatar_io.jpg" alt="">
+                    <div class="flex alignCenter hideLinks padding5px">
+                        <a href=""><i class="fa-solid fa-circle-notch colorGrey"></i></a>
+                        <a href=""><i class="fa-solid fa-message colorGrey"></i></a>
+                        <a href=""><i class="fa-solid fa-ellipsis-vertical colorGrey"></i></a>
+                    </div>
+                </div>
+                <!-- NOTIFICATION --------------------------------------------------------->
+                <div class="notification flex alignCenter padding10px gap5px">
+                    <div>
+                        <button><i class="fa-solid fa-bell-slash notificationBell cursorPointer"></i></button>
+                    </div>
+                    <div class="lineHeight10">
+                        <p>Ricevi notifiche di nuovi messaggi</p>
+                        <a href="">Attiva notifiche desktop</a>
+                    </div>
+
+                </div>
+                <!-- SEARCHBAR --------------------------------------------------------->
+                <div class="searchBar ">
+                    <div class="flex jCCenter alignCenter width14">
+                        <i class="fa-solid fa-magnifying-glass colorGrey"></i></div>
+                    <input v-model="searchInput" type="search" placeholder="Cerca o inizia una nuova chat">
+
+                </div>
+                <!-- CHATLIST --------------------------------------------------------->
+                <div class="chatList flex directionColumn alignCenter ">
+                    <template v-for="(contact,i) in filteredSearch()">
+                        <div  @click="currentProfile=i" class="flex width100">
+                            <div class="padding5px">
+                                <img class="profileIcon" :src="contact.avatar">
+                            </div>
+                            <div class="chattingInfo flex directionColumn jCCenter flexGrow line">
+                                <div class="flex jCSpace">
+                                    <h2>{{contact.name}}</h2>
+                                    <p class="padding0px15px colorGrey">{{dateSplitter(contact.messages[contact.messages.length - 1].date)}}</p>
+                                </div>
+                                <p class="colorGrey">{{truncate(contact.messages[contact.messages.length-1].message , 25)}}</p>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- MAINCONTENT --------------------------------------------------------->
+            <div class="mainContent flex directionColumn">
+
+                <!-- MAINNAVBAR --------------------------------------------------------->
+                <template v-for="(contact,i) in contacts">
+                    <div v-if="currentProfile == i" class="mainNavBar flex ">
+                        <div class="chattingIcon jCCenter flex padding5px">
+                            <img class="profileIcon" :src="contact.avatar" alt="avatar">
+                        </div>
+                        <div class="flex alignCenter jCSpace width100">
+                            <div class="chattingInfo flex directionColumn jCCenter">
+                                <h2>{{contact.name}}</h2>
+                                <p>Ultimo accesso oggi alle {{dateSplitter(contact.messages[contact.messages.length - 1].date)}}</p>
+                            </div>
+                            <div class="padding0px15px links">
+                                <a href=""><i class="fa-solid fa-magnifying-glass colorGrey"></i></a>
+                                <a href=""><i class="fa-solid fa-paperclip colorGrey"></i></a>
+                                <a href=""><i class="fa-solid fa-ellipsis-vertical colorGrey"></i></a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- CHATPAGE --------------------------------------------------------->
+                    <div v-if="currentProfile == i" class="chatPage flex directionColumn gap12px">
+                        
+                            <template v-for="(message, j) in contact.messages" :key="j">
+                                <div  class="message flex directionColumn" :class="message.status == 'received' ? 'receivedMessage' : 'sentMessage'">
+                                    <div  class="flex">
+                                        <p>{{message.message}} </p>
+                                            <i class="fa-solid fa-chevron-down colorGrey messageMenu dropdown">
+                                                <div class="dropdown-content">
+                                                    <p>Modifica</p>
+                                                    <p @click="deleteMessage(j, contact.messages)">Elimina</p>
+                                                    <p>Copia</p>
+                                                    <p>Inoltra</p>
+                                                </div>
+                                            </i>
+                                        </div>
+                                        <div class="alignSelfEnd sentTime colorGrey">
+                                        <span>{{dateSplitter(message.date)}}</span>
+                                        
+                                    </div>
+                                </div>
+                            </template>
+                            
+                        
+                    </div>
+                </template>
+                <!-- CHATBAR --------------------------------------------------------->
+                <div class="chatBar flex jCCenter alignCenter">
+                    <button class="icon cursorPointer dropdown">
+                        <div class="dropdown-content">
+                            <i class="fa-solid fa-face-tired emojiColor padding5px"></i>
+                            <i class="fa-solid fa-face-surprise emojiColor padding5px"></i>
+                            <i class="fa-solid fa-face-meh emojiColor padding5px"></i>
+                            <i class="fa-solid fa-face-smile-beam emojiColor padding5px"></i>
+                            <i class="fa-solid fa-face-rolling-eyes emojiColor padding5px"></i>
+                            <i class="fa-solid fa-face-grimace emojiColor padding5px"></i>
+                        </div>
+                        <i class="fa-regular fa-face-smile iconChat "></i>
+                    </button>
+
+                    <div class="chatInput flex alignCenter">
+                        <input @keyup.enter="send()" v-model.trim="newMessage" type="text" placeholder="Scrivi un messaggio">
+                    </div>
+                    <button class="icon cursorPointer"><i class="fa-solid fa-microphone iconChat"></i></button>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
