@@ -231,7 +231,7 @@ createApp({
      filteredSearch() {
         
         if (this.searchInput != '' ) {
-            this.finalArray = this.contacts.filter(contact => contact.name.toLowerCase().includes(this.searchInput));
+            this.finalArray = this.contacts.filter(contact => contact.name.toLowerCase().includes(this.searchInput.toLowerCase()));
             
             return this.finalArray;
         } else {
