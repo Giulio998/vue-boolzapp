@@ -26,9 +26,9 @@
                 <div class="sideNavBar jCCenter flex padding5px ">
                     <img class="profileIcon" src="./img/avatar_io.jpg" alt="">
                     <div class="flex alignCenter hideLinks padding5px">
-                        <a href=""><i class="fa-solid fa-circle-notch colorGrey"></i></a>
-                        <a href=""><i class="fa-solid fa-message colorGrey"></i></a>
-                        <a href=""><i class="fa-solid fa-ellipsis-vertical colorGrey"></i></a>
+                        <a href="#"><i class="fa-solid fa-circle-notch colorGrey"></i></a>
+                        <a href="#"><i class="fa-solid fa-message colorGrey"></i></a>
+                        <a href="#"><i class="fa-solid fa-ellipsis-vertical colorGrey"></i></a>
                     </div>
                 </div>
                 <!-- NOTIFICATION --------------------------------------------------------->
@@ -38,7 +38,7 @@
                     </div>
                     <div class="lineHeight10">
                         <p>Ricevi notifiche di nuovi messaggi</p>
-                        <a href="">Attiva notifiche desktop</a>
+                        <a href="#">Attiva notifiche desktop</a>
                     </div>
 
                 </div>
@@ -59,9 +59,9 @@
                             <div class="chattingInfo flex directionColumn jCCenter flexGrow line">
                                 <div class="flex jCSpace">
                                     <h2>{{contact.name}}</h2>
-                                    <p class="padding0px15px colorGrey">{{dateSplitter(contact.messages[contact.messages.length - 1].date)}}</p>
+                                    <p v-if="contact.messages != ''" class="padding0px15px colorGrey">{{dateSplitter(contact.messages[contact.messages.length - 1].date)}}</p>
                                 </div>
-                                <p class="colorGrey">{{truncate(contact.messages[contact.messages.length-1].message , 25)}}</p>
+                                <p v-if="contact.messages != ''" class="colorGrey">{{truncate(contact.messages[contact.messages.length-1].message , 25)}}</p>
                             </div>
                         </div>
                     </template>
@@ -80,12 +80,12 @@
                         <div class="flex alignCenter jCSpace width100">
                             <div class="chattingInfo flex directionColumn jCCenter">
                                 <h2>{{contact.name}}</h2>
-                                <p>Ultimo accesso oggi alle {{dateSplitter(contact.messages[contact.messages.length - 1].date)}}</p>
+                                <p v-if="contact.messages != ''">Ultimo accesso oggi alle {{dateSplitter(contact.messages[contact.messages.length - 1].date)}}</p>
                             </div>
                             <div class="padding0px15px links">
-                                <a href=""><i class="fa-solid fa-magnifying-glass colorGrey"></i></a>
-                                <a href=""><i class="fa-solid fa-paperclip colorGrey"></i></a>
-                                <a href=""><i class="fa-solid fa-ellipsis-vertical colorGrey"></i></a>
+                                <a href="#"><i class="fa-solid fa-magnifying-glass colorGrey"></i></a>
+                                <a href="#"><i class="fa-solid fa-paperclip colorGrey"></i></a>
+                                <a href="#"><i class="fa-solid fa-ellipsis-vertical colorGrey"></i></a>
                             </div>
                         </div>
 
@@ -108,7 +108,7 @@
                                             </i>
                                         </div>
                                         <div class="alignSelfEnd sentTime colorGrey">
-                                        <span>{{dateSplitter(message.date)}}</span>
+                                        <span v-if="contact.messages != ''">{{dateSplitter(message.date)}}</span>
                                         
                                     </div>
                                 </div>
